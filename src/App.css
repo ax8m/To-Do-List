@@ -1,3 +1,8 @@
+body {
+  font-family: Lemonada !important;
+  font-weight: 400 !important;
+}
+
 .App {
   text-align: center;
 }
@@ -36,3 +41,53 @@
     transform: rotate(360deg);
   }
 }
+
+/* ToDo.JS */
+.iconButton {
+  transition: all 0.2s !important;
+}
+
+.iconButton:hover {
+  background-color: #282c34 !important;
+  box-shadow: 0px 7px 7px rgba(0, 0, 0, 4);
+}
+
+.todoCard {
+  transition: all 0.2s !important;
+}
+
+.todoCard:hover {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-shadow: 0px 7px 7px rgba(0, 0, 0, 4);
+}
+/* ===== ToDo.JS ==== */
+
+/* ============ custom fonts ================= */
+@font-face {
+  font-family: Lemonada;
+  src: url("/public/fonts/Lemonada-Light.ttf");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: Lemonada;
+  src: url("/public/fonts/Lemonada-Regular.ttf");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Lemonada;
+  src: url("/public/fonts/Lemonada-Medium.ttf");
+  font-weight: 500;
+}
+@font-face {
+  font-family: Lemonada;
+  src: url("/public/fonts/Lemonada-SemiBold.ttf");
+  font-weight: 600;
+}
+@font-face {
+  font-family: Lemonada;
+  src: url("/public/fonts/Lemonada-Bold.ttf");
+  font-weight: 700;
+}
+/* ============ custom fonts ================*/
