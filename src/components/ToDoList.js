@@ -13,6 +13,9 @@ import TextField from "@mui/material/TextField";
 
 // OTHERS
 import { v4 as uuidv4 } from "uuid";
+import { useState } from "react";
+import { TodosContext } from "../context/todosContext";
+import { useContext } from "react";
 
 // icons
 import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
@@ -23,32 +26,26 @@ import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
 // Components
 import ToDo from "./ToDo";
 
-const todos = [
-  {
-    id: uuidv4(),
-    title: "قراءة كتاب",
-    details: "كتاب الف ليلة وليلة",
-    isCompleted: false,
-  },
-  {
-    id: uuidv4(),
-    title: "قراءة كتاب",
-    details: "كتاب الف ليلة وليلة",
-    isCompleted: false,
-  },
-  {
-    id: uuidv4(),
-    title: "قراءة كتاب",
-    details: "كتاب الف ليلة وليلة",
-    isCompleted: false,
-  },
-];
-
 export default function ToDoList() {
+  const { todos, setTodos } = useContext(TodosContext);
+
+  const [titleInput, setTitleInput] = useState("");
+
   const todosJsx = todos.map((t) => {
-    return <ToDo key={t.id} title={t.title} details={t.details} />;
+    return <ToDo key={t.id} todo={t} />;
   });
 
+  function handleAddClick() {
+    const newTodo = {
+      id: uuidv4(),
+      title: titleInput,
+      details: "",
+      isCompleted: false,
+    };
+
+    setTodos([...todos, newTodo]);
+    setTitleInput("");
+  }
   return (
     <Container maxWidth="sm">
       <Card sx={{ minWidth: 275 }}>
@@ -87,7 +84,11 @@ export default function ToDoList() {
                 id="outlined-basic"
                 label="عنوان المهمة"
                 variant="outlined"
-                sx={{ width: "100%" }}
+                style={{ width: "100%" }}
+                value={titleInput}
+                onChange={(e) => {
+                  setTitleInput(e.target.value);
+                }}
               />
             </Grid>
 
@@ -99,7 +100,10 @@ export default function ToDoList() {
             >
               <Button
                 variant="contained"
-                style={{ width: "100%", height: "100%" }}
+                style={{ width: "100%", height: "100%", borderRadius: "20px" }}
+                onClick={() => {
+                  handleAddClick();
+                }}
               >
                 إضافة
               </Button>
