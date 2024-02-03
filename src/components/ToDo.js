@@ -4,7 +4,6 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
-import CheckIcon from "@mui/icons-material/Check";
 import Dialog from "@mui/material/Dialog";
 
 // Dialog
@@ -12,9 +11,11 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import TextField from "@mui/material/TextField";
 
 // ICONS
 import IconButton from "@mui/material/IconButton";
+import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
@@ -23,10 +24,16 @@ import { TodosContext } from "../context/todosContext";
 
 export default function ToDo({ todo, handleCheck }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  const [updatedTodo, setUpdatedTodo] = useState({
+    title: todo.title,
+    details: todo.details,
+  });
   const { todos, setTodos } = useContext(TodosContext);
 
   // Event Handlers Functions
 
+  // Check Event Handlers Function
   function handleCheckClick() {
     const updatedTodos = todos.map((t) => {
       if (t.id === todo.id) {
@@ -35,16 +42,21 @@ export default function ToDo({ todo, handleCheck }) {
       return t;
     });
     setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
   }
+  // Check Event Handlers Function
+
+  // Check Event Handlers Function
+
+  // Delete Event Handlers Function
 
   function handleDeleteClick() {
     setShowDeleteDialog(true);
   }
 
-  function handleClose() {
+  function handleDeleteDialogClose() {
     setShowDeleteDialog(false);
   }
-
   function handleDeleteConfirm() {
     const updatedTodos = todos.filter((t) => {
       // if (t.id == todo.id) {
@@ -57,7 +69,36 @@ export default function ToDo({ todo, handleCheck }) {
     });
 
     setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
   }
+
+  // ======= Delete Event Handlers Function ======
+
+  // Update Event Handlers Function
+
+  function handleUpdateClick() {
+    setShowUpdateDialog(true);
+  }
+  function handleUpdateClose() {
+    setShowUpdateDialog(false);
+  }
+  function handleUpdateConfirm() {
+    const updatedTodos = todos.map((t) => {
+      if (t.id === todo.id) {
+        return {
+          ...t,
+          title: updatedTodo.title,
+          details: updatedTodo.details,
+        };
+      } else {
+        return t;
+      }
+    });
+    setTodos(updatedTodos);
+    setShowUpdateDialog(false);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+  }
+  // ====== Update Event Handlers Function ======
 
   //  ====== Event Handlers =====
   return (
@@ -65,7 +106,7 @@ export default function ToDo({ todo, handleCheck }) {
       {/* DELETE Dialog */}
       <Dialog
         sx={{ direction: "rtl" }}
-        onClose={handleClose}
+        onClose={handleDeleteDialogClose}
         open={showDeleteDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -79,13 +120,60 @@ export default function ToDo({ todo, handleCheck }) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>إلغاء </Button>
+          <Button onClick={handleDeleteDialogClose}>إلغاء </Button>
           <Button autoFocus onClick={handleDeleteConfirm}>
             تأكيد
           </Button>
         </DialogActions>
       </Dialog>
       {/* === DELETE MOADAL === */}
+
+      {/* Update Dialog */}
+      <Dialog
+        sx={{ direction: "rtl" }}
+        onClose={handleUpdateClose}
+        open={showUpdateDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">تعديل المهمة</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            required
+            margin="dense"
+            id="name"
+            label="عنوان المهمة"
+            fullWidth
+            variant="standard"
+            value={updatedTodo.title}
+            onChange={(e) => {
+              setUpdatedTodo({ ...updatedTodo, title: e.target.value });
+            }}
+          />
+
+          <TextField
+            autoFocus
+            required
+            margin="dense"
+            id="name"
+            label=" التفاصيل"
+            fullWidth
+            variant="standard"
+            value={updatedTodo.details}
+            onChange={(e) => {
+              setUpdatedTodo({ ...updatedTodo, details: e.target.value });
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleUpdateClose}>إلغاء </Button>
+          <Button autoFocus onClick={handleUpdateConfirm}>
+            تأكيد
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* === Update MOADAL === */}
 
       {/* Card */}
       <Card
@@ -103,7 +191,13 @@ export default function ToDo({ todo, handleCheck }) {
         <CardContent>
           <Grid container spacing={2}>
             <Grid xs={8}>
-              <Typography variant="h4" sx={{ textAlign: "right" }}>
+              <Typography
+                variant="h4"
+                sx={{ textAlign: "right" }}
+                style={{
+                  textDecoration: todo.isCompleted ? "line-through" : "none",
+                }}
+              >
                 {todo.title}
               </Typography>
 
@@ -137,6 +231,7 @@ export default function ToDo({ todo, handleCheck }) {
               </IconButton>
               {/* Ckeck Icon Button */}
 
+              {/* Edit Buttons */}
               <IconButton
                 className="iconButton"
                 sx={{
@@ -144,9 +239,11 @@ export default function ToDo({ todo, handleCheck }) {
                   color: "#1796aa",
                   border: "solid #1796aa 3Px",
                 }}
+                onClick={handleUpdateClick}
               >
                 <EditIcon />
               </IconButton>
+              {/* Edit Buttons */}
 
               {/* Delete Icon */}
               <IconButton

@@ -13,6 +13,12 @@ const theme = createTheme({
     fontWeightLight: "300",
     fontSize: "2rem",
   },
+
+  palette: {
+    primary: {
+      main: "#dd2c00",
+    },
+  },
 });
 
 const initialTodos = [

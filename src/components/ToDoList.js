@@ -13,15 +13,8 @@ import TextField from "@mui/material/TextField";
 
 // OTHERS
 import { v4 as uuidv4 } from "uuid";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { TodosContext } from "../context/todosContext";
-import { useContext } from "react";
-
-// icons
-import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
-import FormatAlignCenterIcon from "@mui/icons-material/FormatAlignCenter";
-import FormatAlignRightIcon from "@mui/icons-material/FormatAlignRight";
-import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
 
 // Components
 import ToDo from "./ToDo";
@@ -30,11 +23,38 @@ export default function ToDoList() {
   const { todos, setTodos } = useContext(TodosContext);
 
   const [titleInput, setTitleInput] = useState("");
+  const [displayedTodosType, setDisplayTodosType] = useState("all");
 
-  const todosJsx = todos.map((t) => {
+  // filteration arrays
+  const completedTodos = todos.filter((t) => {
+    return t.isCompleted;
+  });
+  const uncompletedTodos = todos.filter((t) => !t.isCompleted);
+
+  let todosToBeRendered = todos;
+
+  if (displayedTodosType == "completed") {
+    todosToBeRendered = completedTodos;
+  } else if (displayedTodosType == "non-completed") {
+    todosToBeRendered = uncompletedTodos;
+  } else {
+    todosToBeRendered = todos;
+  }
+
+  const todosJsx = todosToBeRendered.map((t) => {
     return <ToDo key={t.id} todo={t} />;
   });
 
+  useEffect(() => {
+    const storageTodos = JSON.parse(localStorage.getItem("todos"));
+    setTodos(storageTodos);
+  }, []);
+
+  function changeDisplayTodosType(e) {
+    console.log(e.target.value);
+    setDisplayTodosType(e.target.value);
+  }
+  // Functions for adding a new task to the list
   function handleAddClick() {
     const newTodo = {
       id: uuidv4(),
@@ -43,12 +63,21 @@ export default function ToDoList() {
       isCompleted: false,
     };
 
-    setTodos([...todos, newTodo]);
+    const updatedTodos = [...todos, newTodo];
+    setTodos(updatedTodos);
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
     setTitleInput("");
   }
+
   return (
     <Container maxWidth="sm">
-      <Card sx={{ minWidth: 275 }}>
+      <Card
+        sx={{ minWidth: 275 }}
+        style={{
+          maxHeight: "80vh",
+          overflow: "scroll",
+        }}
+      >
         <CardContent>
           <Typography variant="h2">مهامي</Typography>
           <Divider />
@@ -56,14 +85,15 @@ export default function ToDoList() {
           {/* Filter button */}
           <ToggleButtonGroup
             style={{ direction: "ltr", marginTop: "30px" }}
-            // value={}
+            value={displayedTodosType}
             exclusive
-            // onChange={}
+            onChange={changeDisplayTodosType}
             aria-label="text alignment"
+            color="primary"
           >
-            <ToggleButton value="right">غير المنجز</ToggleButton>
-            <ToggleButton value="center">المنجز</ToggleButton>
-            <ToggleButton value="left">الكل</ToggleButton>
+            <ToggleButton value="non-completed">غير المنجز</ToggleButton>
+            <ToggleButton value="completed">المنجز</ToggleButton>
+            <ToggleButton value="all">الكل</ToggleButton>
           </ToggleButtonGroup>
           {/* ==== Filter button ==== */}
 
@@ -104,6 +134,7 @@ export default function ToDoList() {
                 onClick={() => {
                   handleAddClick();
                 }}
+                disabled={titleInput.length == 0}
               >
                 إضافة
               </Button>
