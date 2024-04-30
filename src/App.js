@@ -24,8 +24,8 @@ const theme = createTheme({
 const initialTodos = [
   {
     id: uuidv4(),
-    title: "قراءة كتاب",
-    details: "كتاب الف ليلة وليلة",
+    title: "قراءة كتب",
+    details: "كتاب الاف ليلة وليلة",
     isCompleted: false,
   },
   {
