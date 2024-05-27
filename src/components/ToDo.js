@@ -4,9 +4,9 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
-import Dialog from "@mui/material/Dialog";
 
 // Dialog
+import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
@@ -22,9 +22,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useContext, useState } from "react";
 import { TodosContext } from "../context/todosContext";
 
-export default function ToDo({ todo, handleCheck }) {
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+export default function ToDo({ todo, showDelete, showUpdate }) {
   const [updatedTodo, setUpdatedTodo] = useState({
     title: todo.title,
     details: todo.details,
@@ -49,132 +47,21 @@ export default function ToDo({ todo, handleCheck }) {
   // Check Event Handlers Function
 
   // Delete Event Handlers Function
-
   function handleDeleteClick() {
-    setShowDeleteDialog(true);
+    showDelete(todo)
   }
-
-  function handleDeleteDialogClose() {
-    setShowDeleteDialog(false);
-  }
-  function handleDeleteConfirm() {
-    const updatedTodos = todos.filter((t) => {
-      // if (t.id == todo.id) {
-      //   return false;
-      // } else {
-      //   return true;
-      // }
-
-      return t.id != todo.id;
-    });
-
-    setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
-  }
-
   // ======= Delete Event Handlers Function ======
 
   // Update Event Handlers Function
 
   function handleUpdateClick() {
-    setShowUpdateDialog(true);
-  }
-  function handleUpdateClose() {
-    setShowUpdateDialog(false);
-  }
-  function handleUpdateConfirm() {
-    const updatedTodos = todos.map((t) => {
-      if (t.id === todo.id) {
-        return {
-          ...t,
-          title: updatedTodo.title,
-          details: updatedTodo.details,
-        };
-      } else {
-        return t;
-      }
-    });
-    setTodos(updatedTodos);
-    setShowUpdateDialog(false);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    showUpdate(todo)
   }
   // ====== Update Event Handlers Function ======
 
   //  ====== Event Handlers =====
   return (
     <>
-      {/* DELETE Dialog */}
-      <Dialog
-        sx={{ direction: "rtl" }}
-        onClose={handleDeleteDialogClose}
-        open={showDeleteDialog}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          هل أنت متأكد من حذف هذه المهمة؟
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            لا يمكنك التراجع عن الحذف بعد إتمامه
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDeleteDialogClose}>إلغاء </Button>
-          <Button autoFocus onClick={handleDeleteConfirm}>
-            تأكيد
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* === DELETE MOADAL === */}
-
-      {/* Update Dialog */}
-      <Dialog
-        sx={{ direction: "rtl" }}
-        onClose={handleUpdateClose}
-        open={showUpdateDialog}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">تعديل المهمة</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            id="name"
-            label="عنوان المهمة"
-            fullWidth
-            variant="standard"
-            value={updatedTodo.title}
-            onChange={(e) => {
-              setUpdatedTodo({ ...updatedTodo, title: e.target.value });
-            }}
-          />
-
-          <TextField
-            autoFocus
-            required
-            margin="dense"
-            id="name"
-            label=" التفاصيل"
-            fullWidth
-            variant="standard"
-            value={updatedTodo.details}
-            onChange={(e) => {
-              setUpdatedTodo({ ...updatedTodo, details: e.target.value });
-            }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleUpdateClose}>إلغاء </Button>
-          <Button autoFocus onClick={handleUpdateConfirm}>
-            تأكيد
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* === Update MOADAL === */}
-
       {/* Card */}
       <Card
         className="todoCard"
