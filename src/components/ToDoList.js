@@ -23,13 +23,15 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { v4 as uuidv4 } from "uuid";
 import { useState, useContext, useEffect } from "react";
 import { TodosContext } from "../context/todosContext";
+import { useToast } from "../context/ToastContext";
 
 // Components
 import ToDo from "./ToDo";
 
 export default function ToDoList(todo) {
   const { todos, setTodos } = useContext(TodosContext);
-
+  const {showHideToast} = useToast()
+  
   const [dialogTodo, setDialogTodo] = useState({
     title: todo.title,
     details: todo.details,
@@ -79,6 +81,7 @@ export default function ToDoList(todo) {
     setTodos(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
     setTitleInput("");
+    showHideToast("تـم إضافة مهمة جديدة بنجاح")
   }
 
     // ====== DELETE Event Handlers Function ======
@@ -99,6 +102,7 @@ export default function ToDoList(todo) {
     setTodos(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
     setShowDeleteDialog(false);
+    showHideToast("تم الحذف بنجاح")
   }
   // ====== DELETE Event Handlers Function ======
 
@@ -128,6 +132,7 @@ export default function ToDoList(todo) {
     setTodos(updatedTodos);
     setShowUpdateDialog(false);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    showHideToast("تم التحديث بنجاح")
   }
   // ====== Update Event Handlers Function ======
 

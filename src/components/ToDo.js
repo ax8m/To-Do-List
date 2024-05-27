@@ -21,6 +21,7 @@ import EditIcon from "@mui/icons-material/Edit";
 
 import { useContext, useState } from "react";
 import { TodosContext } from "../context/todosContext";
+import { useToast } from "../context/ToastContext";
 
 export default function ToDo({ todo, showDelete, showUpdate }) {
   const [updatedTodo, setUpdatedTodo] = useState({
@@ -28,6 +29,7 @@ export default function ToDo({ todo, showDelete, showUpdate }) {
     details: todo.details,
   });
   const { todos, setTodos } = useContext(TodosContext);
+  const {showHideToast} = useToast();
 
   // Event Handlers Functions
 
@@ -41,6 +43,7 @@ export default function ToDo({ todo, showDelete, showUpdate }) {
     });
     setTodos(updatedTodos);
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    showHideToast("تم التعديل بنجاح")
   }
   // Check Event Handlers Function
 
