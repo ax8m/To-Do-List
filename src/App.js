@@ -2,8 +2,6 @@ import logo from "./logo.svg";
 import "./App.css";
 import ToDoList from "./components/ToDoList";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { TodosContext } from "./context/todosContext";
-import MySnackBar from "./components/MySnackBar";
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import TodosProvider from "./context/todosContext";
@@ -12,7 +10,7 @@ const theme = createTheme({
   typography: {
     fontFamily: ["Lemonada"],
     fontWeightLight: "300",
-    fontSize: "2rem",
+    fontSize: 13,
   },
 
   palette: {

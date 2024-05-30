@@ -1,17 +1,7 @@
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Unstable_Grid2";
-
-// Dialog
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
 
 // ICONS
 import IconButton from "@mui/material/IconButton";
@@ -19,17 +9,12 @@ import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-import { useContext, useState } from "react";
-import { useTodos } from "../context/todosContext";
+import { useTodosDispatch } from "../context/todosContext";
 import { useToast } from "../context/ToastContext";
 
 export default function ToDo({ todo, showDelete, showUpdate }) {
-  const [updatedTodo, setUpdatedTodo] = useState({
-    title: todo.title,
-    details: todo.details,
-  });
-
-  const {todos,dispatch} = useTodos()
+ 
+  const dispatch = useTodosDispatch();
   const {showHideToast} = useToast();
 
   // Event Handlers Functions
@@ -42,9 +27,7 @@ export default function ToDo({ todo, showDelete, showUpdate }) {
     })
     showHideToast("تم التعديل بنجاح")
   }
-  // Check Event Handlers Function
-
-  // Check Event Handlers Function
+  // ======== Check Event Handlers Function ========
 
   // Delete Event Handlers Function
   function handleDeleteClick() {

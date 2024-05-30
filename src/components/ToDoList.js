@@ -22,7 +22,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 // OTHERS
 import { v4 as uuidv4 } from "uuid";
 import { useState, useContext, useEffect, useReducer } from "react";
-import { useTodos } from "../context/todosContext";
+import { useTodos, useTodosDispatch } from "../context/todosContext";
 import { useToast } from "../context/ToastContext";
 import todosReducer from "../reducers/todosReducer";
 // Components
@@ -30,7 +30,8 @@ import ToDo from "./ToDo";
 
 export default function ToDoList(todo) {
 
-  const {todos, dispatch} = useTodos();
+  const todos = useTodos();
+  const dispatch = useTodosDispatch();
   const {showHideToast} = useToast();
   
   const [dialogTodo, setDialogTodo] = useState({

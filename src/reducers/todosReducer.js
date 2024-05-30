@@ -54,7 +54,10 @@ export default function reducer(currentTodos, action) {
             console.log(action);
             const updatedTodos = currentTodos.map((t) => {
                 if (t.id === action.payload.id) {
-                  t.isCompleted = !t.isCompleted;
+                    const updatedTodo = {
+                        ...t, isCompleted: !t.isCompleted
+                    }
+                    return updatedTodo                
                 }
                 return t;
               });
