@@ -6,7 +6,7 @@ import { TodosContext } from "./context/todosContext";
 import MySnackBar from "./components/MySnackBar";
 import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
-
+import TodosProvider from "./context/todosContext";
 import { ToastProvider } from "./context/ToastContext";
 const theme = createTheme({
   typography: {
@@ -48,23 +48,23 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <ToastProvider>
-        <div
-          className="App"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            background: "#191b1f",
-            height: "100vh",
-            direction: "rtl",
-          }}
-        >
-          <TodosContext.Provider value={{ todos: todos, setTodos: setTodos }}>
-            <ToDoList />
-          </TodosContext.Provider>
-        </div>
-      </ToastProvider>
+      <TodosProvider>
+        <ToastProvider>
+          <div
+            className="App"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              background: "#191b1f",
+              height: "100vh",
+              direction: "rtl",
+            }}
+          >
+              <ToDoList />
+          </div>
+        </ToastProvider>
+      </TodosProvider>
     </ThemeProvider>
   );
 }

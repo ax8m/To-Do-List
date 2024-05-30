@@ -20,7 +20,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
 import { useContext, useState } from "react";
-import { TodosContext } from "../context/todosContext";
+import { useTodos } from "../context/todosContext";
 import { useToast } from "../context/ToastContext";
 
 export default function ToDo({ todo, showDelete, showUpdate }) {
@@ -28,21 +28,18 @@ export default function ToDo({ todo, showDelete, showUpdate }) {
     title: todo.title,
     details: todo.details,
   });
-  const { todos, setTodos } = useContext(TodosContext);
+
+  const {todos,dispatch} = useTodos()
   const {showHideToast} = useToast();
 
   // Event Handlers Functions
 
   // Check Event Handlers Function
   function handleCheckClick() {
-    const updatedTodos = todos.map((t) => {
-      if (t.id === todo.id) {
-        t.isCompleted = !t.isCompleted;
-      }
-      return t;
-    });
-    setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    dispatch({
+      type: "toggledCompleted",
+      payload:todo,
+    })
     showHideToast("تم التعديل بنجاح")
   }
   // Check Event Handlers Function

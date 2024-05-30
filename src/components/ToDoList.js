@@ -21,16 +21,17 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 // OTHERS
 import { v4 as uuidv4 } from "uuid";
-import { useState, useContext, useEffect } from "react";
-import { TodosContext } from "../context/todosContext";
+import { useState, useContext, useEffect, useReducer } from "react";
+import { useTodos } from "../context/todosContext";
 import { useToast } from "../context/ToastContext";
-
+import todosReducer from "../reducers/todosReducer";
 // Components
 import ToDo from "./ToDo";
 
 export default function ToDoList(todo) {
-  const { todos, setTodos } = useContext(TodosContext);
-  const {showHideToast} = useToast()
+
+  const {todos, dispatch} = useTodos();
+  const {showHideToast} = useToast();
   
   const [dialogTodo, setDialogTodo] = useState({
     title: todo.title,
@@ -59,8 +60,9 @@ export default function ToDoList(todo) {
 
 
   useEffect(() => {
-    const storageTodos = JSON.parse(localStorage.getItem("todos")) ?? [];
-    setTodos(storageTodos);
+    dispatch({
+      type: "get",
+    })
   }, []);
 
   // ====== HANDLERS
@@ -70,16 +72,12 @@ export default function ToDoList(todo) {
   }
   // Functions for adding a new task to the list
   function handleAddClick() {
-    const newTodo = {
-      id: uuidv4(),
-      title: titleInput,
-      details: "",
-      isCompleted: false,
-    };
-
-    const updatedTodos = [...todos, newTodo];
-    setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
+    dispatch({
+      type:"added",
+      payload:{
+        newTitle:titleInput,
+      },
+    });
     setTitleInput("");
     showHideToast("تـم إضافة مهمة جديدة بنجاح")
   }
@@ -95,12 +93,10 @@ export default function ToDoList(todo) {
   }
 
   function handleDeleteConfirm() {
-    const updatedTodos = todos.filter((t) => {
-      return t.id != dialogTodo.id;
+    dispatch({
+      type:"deleted",
+      payload:dialogTodo,
     });
-
-    setTodos(updatedTodos);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
     setShowDeleteDialog(false);
     showHideToast("تم الحذف بنجاح")
   }
@@ -117,21 +113,11 @@ export default function ToDoList(todo) {
     setShowUpdateDialog(false);
   }
   function handleUpdateConfirm() {
-    console.log(dialogTodo)
-    const updatedTodos = todos.map((t) => {
-      if (t.id === dialogTodo.id) {
-        return {
-          ...t,
-          title: dialogTodo.title,
-          details: dialogTodo.details,
-        };
-      } else {
-        return t;
-      }
-    });
-    setTodos(updatedTodos);
+    dispatch({
+      type:"updated",
+      payload:dialogTodo,
+    })
     setShowUpdateDialog(false);
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
     showHideToast("تم التحديث بنجاح")
   }
   // ====== Update Event Handlers Function ======
